@@ -26,19 +26,19 @@ In response, the unit and the number are separated with a whitespace.
 ```typescript
 [
     {
-        portion_size string,
-        calories string,
-        fat string,
-        saturated_fat string,
-        sodium string,
-        carbs string,
-        fiber string,
-        sugar string,
-        protein string,
-        vitamin_d string,
-        calcium string,
-        iron string,
-        potassium string,
+        portion_size: string,
+        calories: string,
+        fat: string,
+        saturated_fat: string,
+        sodium: string,
+        carbs: string,
+        fiber: string,
+        sugar: string,
+        protein: string,
+        vitamin_d: string,
+        calcium: string,
+        iron: string,
+        potassium: string,
     }
 ]
 ```
