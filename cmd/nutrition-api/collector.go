@@ -10,6 +10,9 @@ import (
 	"github.com/gocolly/colly/v2/extensions"
 )
 
+var collector *colly.Collector
+
+// initCollector initializes the collector variable
 func initCollector() {
 	collector = colly.NewCollector(
 		colly.CacheDir("./.cache/nutritionvalue"),

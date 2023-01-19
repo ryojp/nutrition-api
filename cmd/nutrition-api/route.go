@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +18,7 @@ func setupRouter() *gin.Engine {
 	})
 
 	r.GET("/search", handleSearch)
-	r.GET("/view", handleView)
+	r.GET("/nutrition", handleNutrition)
 
 	return r
 }
@@ -27,7 +26,6 @@ func setupRouter() *gin.Engine {
 // handleSearch returns an array of nutrition pages
 func handleSearch(c *gin.Context) {
 	q := c.Query("q")
-	visit := c.Query("visit")
 
 	queryUrl := baseUrl + "/search.php?food_query=" + q
 
@@ -35,20 +33,22 @@ func handleSearch(c *gin.Context) {
 	registerScrapeSearchResults(collector, &searchResults)
 
 	collector.Visit(queryUrl)
-	if visit == "" {
-		c.JSON(http.StatusOK, searchResults)
+	c.JSON(http.StatusOK, searchResults)
+}
+
+// handleNutrition dispatches a handler and returns the nutrition
+func handleNutrition(c *gin.Context) {
+	q := c.Query("q")
+	url := c.Query("url")
+
+	if url != "" {
+		handleView(c)
+	} else if q != "" {
+		handleFirstHit(c)
 	} else {
-		n, err := strconv.Atoi(visit)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "'visit' must be an integer",
-			})
-		}
-		n = (n + len(searchResults)) % len(searchResults)
-		var nutrition Nutrition
-		registerScrapeNutrition(collector, &nutrition)
-		collector.Visit(searchResults[n].Url)
-		c.JSON(http.StatusOK, nutrition)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "incorrect query parameter",
+		})
 	}
 }
 
@@ -66,4 +66,29 @@ func handleView(c *gin.Context) {
 
 	collector.Visit(url)
 	c.JSON(http.StatusOK, nutrition)
+}
+
+// handleFirstHit returns the nutrition of the first hit result
+func handleFirstHit(c *gin.Context) {
+	q := c.Query("q")
+	queryUrl := baseUrl + "/search.php?food_query=" + q
+
+	var searchResults []SearchResult
+	registerScrapeSearchResults(collector, &searchResults)
+	collector.Visit(queryUrl)
+
+	if len(searchResults) == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "no result found from the given search query",
+		})
+		return
+	}
+
+	var nutrition Nutrition
+	registerScrapeNutrition(collector, &nutrition)
+	collector.Visit(searchResults[0].Url)
+	c.JSON(http.StatusOK, FirstHit{
+		SearchResult: searchResults[0],
+		Nutrition:    nutrition,
+	})
 }
