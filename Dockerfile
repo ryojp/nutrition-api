@@ -9,4 +9,5 @@ FROM alpine:latest
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY --from=builder /app/nutrition-api ./nutrition-api
+EXPOSE 8080
 CMD ["./nutrition-api"]

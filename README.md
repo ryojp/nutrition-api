@@ -4,6 +4,11 @@ This API returns nutrition data from `nutritionvalue.org`
 It uses [Gin](https://github.com/gin-gonic/gin) for the API server and [Colly](https://github.com/gocolly/colly) for caching and throttling.
 
 ## Usage
+### Docker
+* Build an image with `docker build -t nutrition-api .` (note the trailing dot)
+* Run it with `docker run --rm -it -p 8080:8080 -v $(pwd)/.cache/:/app/.cache/ nutrition-api`
+
+### Go
 Install [Go](https://go.dev/) and run `go run ./cmd/nutrition-api`
 
 ## Routes
