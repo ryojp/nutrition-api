@@ -87,7 +87,7 @@ func handleFirstHit(c *gin.Context) {
 	var nutrition Nutrition
 	registerScrapeNutrition(collector, &nutrition)
 	collector.Visit(searchResults[0].Url)
-	c.JSON(http.StatusOK, FirstHit{
+	c.JSON(http.StatusOK, SearchResultWithNutrition{
 		SearchResult: searchResults[0],
 		Nutrition:    nutrition,
 	})

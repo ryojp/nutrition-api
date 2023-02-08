@@ -21,7 +21,7 @@ type Nutrition struct {
 	Potassium    string `json:"potassium"`
 }
 
-type FirstHit struct {
+type SearchResultWithNutrition struct {
 	Nutrition Nutrition `json:"nutrition"`
 	SearchResult
 }
