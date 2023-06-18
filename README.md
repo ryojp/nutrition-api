@@ -1,15 +1,42 @@
 # Nutrition API
-This API returns nutrition data from `nutritionvalue.org`
+This API returns nutrition data from [nutritionvalue.org](https://nutritionvalue.org)
 
-It uses [Gin](https://github.com/gin-gonic/gin) for the API server and [Colly](https://github.com/gocolly/colly) for caching and throttling.
+It uses [Gin](https://github.com/gin-gonic/gin) for the API server and [Colly](https://github.com/gocolly/colly) for **caching** and **throttling**.
+
 
 ## Usage
-### Docker
-* Build an image with `docker build -t nutrition-api .` (note the trailing dot)
+
+### Docker (Pre-built image)
+
+```sh
+docker run --rm -it -p 8080:8080 -v $(pwd)/.cache/:/app/.cache/ ryojpn/nutrition-api
+```
+
+### Docker (Building on your own)
+* Build an image with `docker build -t nutrition-api ./`
 * Run it with `docker run --rm -it -p 8080:8080 -v $(pwd)/.cache/:/app/.cache/ nutrition-api`
 
 ### Go
 Install [Go](https://go.dev/) and run `go run ./cmd/nutrition-api`
+
+
+## Multi-platform building
+
+1. Create a builder
+```sh
+docker buildx create --name armamd
+```
+
+2. Select the created builder
+```sh
+docker buildx use armamd
+```
+
+3. Build an image targeting `linux/arm64` and `linux/amd64`
+```sh
+docker buildx build --push --platform linux/amd64,linux/arm64 -t ryojpn/nutrition-api ./
+```
+
 
 ## Routes
 ###  GET /nutrition?q={keyword}
