@@ -1,15 +1,10 @@
 name: Publish image to Docker Hub
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-    tags:
-      - 'v*'
-    paths-ignore:
-      - '**.md'
-      - '.gitignore'
-      - '.github/**'
 
 jobs:
   push_to_registry:
