@@ -20,24 +20,6 @@ docker run --rm -it -p 8080:8080 -v $(pwd)/.cache/:/app/.cache/ ryojpn/nutrition
 Install [Go](https://go.dev/) and run `go run ./cmd/nutrition-api`
 
 
-## Multi-platform building
-
-1. Create a builder
-```sh
-docker buildx create --name armamd
-```
-
-2. Select the created builder
-```sh
-docker buildx use armamd
-```
-
-3. Build an image targeting `linux/arm64` and `linux/amd64`
-```sh
-docker buildx build --push --platform linux/amd64,linux/arm64 -t ryojpn/nutrition-api ./
-```
-
-
 ## Routes
 ###  GET /nutrition?q={keyword}
 This endpoint searches and visits the initial hit result.
@@ -64,7 +46,6 @@ This endpoint searches and visits the initial hit result.
   "url": "https://www.nutritionvalue.org/Bagel_51180010_nutritional_value.html"
 }
 ```
-
 
 
 ###  GET /nutrition?url={url}
@@ -206,3 +187,15 @@ The response type is
 ]
 ```
 
+
+## Multi-platform building
+
+1. Create a builder and use it
+```sh
+docker buildx create --name x --use
+```
+
+2. Build an image targeting `linux/arm64` and `linux/amd64`
+```sh
+docker buildx build --push --platform linux/amd64,linux/arm64 -t ryojpn/nutrition-api ./
+```
